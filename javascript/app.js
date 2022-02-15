@@ -15,14 +15,56 @@ class Othello{
     legalMoveCheck(y, x) {
         this.legalMove = false
         if (this.rows[y][x - 1] > 0 || this.rows[y][x + 1] > 0 || this.rows[y + 1][x] > 0 || this.rows[y - 1][x] > 0 || this.rows[y + 1][x + 1] > 0 || this.rows[y - 1][x + 1] > 0 || this.rows[y + 1][x - 1] > 0 || this.rows[y - 1][x - 1] > 0) {
-            for (let i = x - 1; i >= 0; i--){ // check to see if piece is in same row in reverse
-                if (this.rows[y][i] === 1) {
+            for (let i = x - 1; i >= 0; i--){ // check to see if a black piece is in same row in reverse
+                if (this.rows[y][i] === 1) { // look for the first instance of a black piece
+                    // checking first instance of black piece to reference piece is more than 1
+                    if ((Math.abs(this.rows[y].indexOf(1, i) - x)) > 1){
+                        let allWhitePieces = true
+                        // checking if any of the pieces inbetween are black or empty
+                        for (let j = i + 1; j < x; j++){
+                            if (this.rows[y][j] === 1){ // If there is a black piece inbetween, return false
+                                allWhitePieces = false
+                                break
+                            }
+                            else if (this.rows[y][j] === 0){ // if there is an empty space, return false
+                                allWhitePieces = false
+                                break
+                            }
+                        }
+                        if (allWhitePieces){ // if they all happen to be white, make all of the spaces black
+                            for (let j = i + 1; j <= x; j++){
+                                this.rows[y][j] = 1
+                            }
+                        }
+                    }
                     this.legalMove = true
+                    break
                 }
             }
             for (let i = x + 1; i < 8; i++){ // check to see if piece is in same row forward
                 if (this.rows[y][i] === 1) {
+                    // checking first instance of black piece to reference piece is more than 1
+                    if ((Math.abs(this.rows[y].indexOf(1, i) - x)) > 1){
+                        let allWhitePieces = true
+                        // checking if any of the pieces inbetween are black or empty
+                        for (let j = i - 1; j > x; j--){
+                            if (this.rows[y][j] === 1){ // If there is a black piece inbetween, return false
+                                allWhitePieces = false
+                                break
+                            }
+                            else if (this.rows[y][j] === 0){ // if there is an empty space, return false
+                                allWhitePieces = false
+                                break
+                            }
+                        }
+                        if (allWhitePieces){ // if they all happen to be white, make all of the spaces black
+                            for (let j = i - 1; j >= x; j--){
+                                this.rows[y][j] = 1
+                            }
+                        }
+                    }
                     this.legalMove = true
+                    break
                 }
             }
             for (let i = y - 1; i >= 0; i--){ // check to see if piece is in the same column in reverse
@@ -62,7 +104,9 @@ class Othello{
 
 let x = new Othello
 x.createRows()
-console.log(x.legalMoveCheck(3, 7))
+console.log(x.rows[4])
+console.log(x.legalMoveCheck(4, 2))
+console.log(x.rows[4])
 // document.querySelector('#r5c6').addEventListener('click', function() {
 //     document.appendChild('span'.className('black'))
 // })
