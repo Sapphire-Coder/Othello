@@ -5,6 +5,16 @@ body{
 button{
     margin-bottom: 5px;
 }
+#playArea{
+    display:grid;
+    grid-template-columns: 1fr 600px 1fr;
+}
+#playerScore{
+    min-width: 100px;
+}
+#cpuScore{
+    min-width: 100px;
+}
 
 #gameBoard{
     display: grid;
