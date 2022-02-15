@@ -1,5 +1,9 @@
 body{
     background-color: tan;
+    text-align: center;
+}
+button{
+    margin-bottom: 5px;
 }
 
 #gameBoard{
