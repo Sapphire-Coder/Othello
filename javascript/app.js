@@ -173,12 +173,54 @@ class Othello{
             }
             for (let i = y - 1 , j = x + 1 ; i >= 0 && j < 8; i--, j++){ // check to see if piece is in up-right diagonal
                 if (this.rows[i][j] === 1){
+                    // checking first instance of black piece to reference piece is more than 1
+                    if (Math.abs(i - y) > 1 && Math.abs(j - x) > 1){
+                        let allWhitePieces = true
+                        // checking if any of the pieces inbetween are black or empty
+                        for (let k = i + 1, l = j - 1; k < y && l > x; k++, l--){
+                            if (this.rows[k][l] === 1){ // If there is a black piece inbetween, return false
+                                allWhitePieces = false
+                                break
+                            }
+                            else if (this.rows[k][l] === 0){ // if there is an empty space, return false
+                                allWhitePieces = false
+                                break
+                            }
+                        }
+                        if (allWhitePieces){ // if they all happen to be white, make all of the spaces black
+                            for (let k = i + 1, l = j - 1; k <= y && l >= x; k++, l--){
+                                this.rows[k][l] = 1
+                            }
+                        }
+                    }
                     this.legalMove = true
+                    break
                 }
             }
             for (let i = y + 1 , j = x - 1 ; i < 8 && j >= 0; i++, j--){ // check to see if piece is in down-left diagonal
                 if (this.rows[i][j] === 1){
+                    // checking first instance of black piece to reference piece is more than 1
+                    if (Math.abs(i - y) > 1 && Math.abs(j - x) > 1){
+                        let allWhitePieces = true
+                        // checking if any of the pieces inbetween are black or empty
+                        for (let k = i - 1, l = j + 1; k > y && l < x; k--, l++){
+                            if (this.rows[k][l] === 1){ // If there is a black piece inbetween, return false
+                                allWhitePieces = false
+                                break
+                            }
+                            else if (this.rows[k][l] === 0){ // if there is an empty space, return false
+                                allWhitePieces = false
+                                break
+                            }
+                        }
+                        if (allWhitePieces){ // if they all happen to be white, make all of the spaces black
+                            for (let k = i - 1, l = j + 1; k >= y && l <= x; k--, l++){
+                                this.rows[k][l] = 1
+                            }
+                        }
+                    }
                     this.legalMove = true
+                    break
                 }
             }
         }
@@ -189,9 +231,9 @@ class Othello{
 let x = new Othello
 x.createRows()
 console.log(x.rows)
-x.rows[2][3] = 1
+x.rows[5][2] = 1
 console.log(x.rows)
-console.log(x.legalMoveCheck(4, 5))
+console.log(x.legalMoveCheck(2, 5))
 console.log(x.rows)
 // document.querySelector('#r5c6').addEventListener('click', function() {
 //     document.appendChild('span'.className('black'))
