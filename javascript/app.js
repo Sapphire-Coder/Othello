@@ -22,23 +22,23 @@ class Othello{
     legalMoveCheck(playerNum, y, x) {
         this.legalMove = false
         if ((this.rows[y][(x == 0 ? 1 : x) - 1] > 0 || this.rows[y][(x == 7 ? 6 : x) + 1] > 0 || this.rows[(y == 7 ? 6 : y) + 1][x] > 0 || this.rows[(y == 0 ? 1 : y) - 1][x] > 0 || this.rows[(y == 7 ? 6 : y) + 1][(x == 7 ? 6 : x) + 1] > 0 || this.rows[(y == 0 ? 1 : y) - 1][(x == 7 ? 6 : x) + 1] > 0 || this.rows[(y == 7 ? 6 : y) + 1][(x == 0 ? 1 : x) - 1] > 0 || this.rows[(y == 0 ? 1 : y) - 1][(x == 0 ? 1 : x) - 1] > 0) && this.rows[y][x] == 0) {
-            for (let i = x - 1; i >= 0; i--){ // check to see if a black piece is in same row in reverse
-                if (this.rows[y][i] === playerNum) { // look for the first instance of a black piece
-                    // checking first instance of black piece to reference piece is more than 1
+            for (let i = x - 1; i >= 0; i--){ // check to see if a same color piece is in same row in reverse
+                if (this.rows[y][i] === playerNum) { // look for the first instance of a same piece
+                    // checking first instance of same piece space to reference piece is more than 1
                     if ((Math.abs(this.rows[y].indexOf(playerNum, i) - x)) > 1){
-                        let allWhitePieces = true
-                        // checking if any of the pieces inbetween are black or empty
+                        let oppColor = true
+                        // checking if any of the pieces inbetween are the same color or empty
                         for (let j = i + 1; j < x; j++){
-                            if (this.rows[y][j] === playerNum){ // If there is a black piece inbetween, return false
-                                allWhitePieces = false
+                            if (this.rows[y][j] === playerNum){ // If there is a same color piece inbetween, return false
+                                oppColor = false
                                 break
                             }
                             else if (this.rows[y][j] === 0){ // if there is an empty space, return false
-                                allWhitePieces = false
+                                oppColor = false
                                 break
                             }
                         }
-                        if (allWhitePieces){ // if they all happen to be white, make all of the spaces black
+                        if (oppColor){ // if they all happen to be the opposing color, make all of the spaces player color
                             for (let j = i + 1; j <= x; j++){
                                 if (playerNum === 1) {
                                     this.blackFlips.push([y, j])
@@ -56,21 +56,21 @@ class Othello{
             }
             for (let i = x + 1; i < 8; i++){ // check to see if piece is in same row forward
                 if (this.rows[y][i] === playerNum) {
-                    // checking first instance of black piece to reference piece is more than 1
+                    // checking first instance of same color piece to reference piece is more than 1
                     if ((Math.abs(this.rows[y].indexOf(playerNum, i) - x)) > 1){
-                        let allWhitePieces = true
-                        // checking if any of the pieces inbetween are black or empty
+                        let oppColor = true
+                        // checking if any of the pieces inbetween are same color or empty
                         for (let j = i - 1; j > x; j--){
-                            if (this.rows[y][j] === playerNum){ // If there is a black piece inbetween, return false
-                                allWhitePieces = false
+                            if (this.rows[y][j] === playerNum){ // If there is a same color piece inbetween, return false
+                                oppColor = false
                                 break
                             }
                             else if (this.rows[y][j] === 0){ // if there is an empty space, return false
-                                allWhitePieces = false
+                                oppColor = false
                                 break
                             }
                         }
-                        if (allWhitePieces){ // if they all happen to be white, make all of the spaces black
+                        if (oppColor){ // if they all happen to be opposing color, make all of the spaces player color
                             for (let j = i - 1; j >= x; j--){
                                 if (playerNum === 1) {
                                     this.blackFlips.push([y, j])
@@ -88,21 +88,21 @@ class Othello{
             }
             for (let i = y - 1; i >= 0; i--){ // check to see if piece is in the same column in reverse
                 if (this.rows[i][x] === playerNum){
-                    // checking first instance of black piece to reference piece is more than 1
+                    // checking first instance of same color piece space to reference piece is more than 1
                     if (Math.abs(i - y) > 1){
-                        let allWhitePieces = true
-                        // checking if any of the pieces inbetween are black or empty
+                        let oppColor = true
+                        // checking if any of the pieces inbetween are same color or empty
                         for (let j = i + 1; j < y; j++){
-                            if (this.rows[j][x] === playerNum){ // If there is a black piece inbetween, return false
-                                allWhitePieces = false
+                            if (this.rows[j][x] === playerNum){ // If there is a same color piece inbetween, return false
+                                oppColor = false
                                 break
                             }
                             else if (this.rows[j][x] === 0){ // if there is an empty space, return false
-                                allWhitePieces = false
+                                oppColor = false
                                 break
                             }
                         }
-                        if (allWhitePieces){ // if they all happen to be white, make all of the spaces black
+                        if (oppColor){ // if they all happen to be opposing color, make all of the spaces player color
                             for (let j = i + 1; j <= y; j++){
                                 if (playerNum === 1) {
                                     this.blackFlips.push([j, x])
@@ -120,21 +120,21 @@ class Othello{
             }
             for (let i = y + 1; i < 8; i++){ // check to see if piece is in the same column forward
                 if (this.rows[i][x] === playerNum){
-                    // checking first instance of black piece to reference piece is more than 1
+                    // checking first instance of same color piece space to reference piece is more than 1
                     if (Math.abs(i - y) > 1){
-                        let allWhitePieces = true
-                        // checking if any of the pieces inbetween are black or empty
+                        let oppColor = true
+                        // checking if any of the pieces inbetween are same color or empty
                         for (let j = i - 1; j > y; j--){
-                            if (this.rows[j][x] === playerNum){ // If there is a black piece inbetween, return false
-                                allWhitePieces = false
+                            if (this.rows[j][x] === playerNum){ // If there is a same color piece inbetween, return false
+                                oppColor = false
                                 break
                             }
                             else if (this.rows[j][x] === 0){ // if there is an empty space, return false
-                                allWhitePieces = false
+                                oppColor = false
                                 break
                             }
                         }
-                        if (allWhitePieces){ // if they all happen to be white, make all of the spaces black
+                        if (oppColor){ // if they all happen to be opposing color, make all of the spaces player color
                             for (let j = i - 1; j >= y; j--){
                                 if (playerNum === 1) {
                                     this.blackFlips.push([j, x])
@@ -152,21 +152,21 @@ class Othello{
             }
             for (let i = y + 1 , j = x + 1 ; i < 8 && j < 8; i++, j++){ // check to see if piece is in down-right diagonal
                 if (this.rows[i][j] === playerNum){
-                    // checking first instance of black piece to reference piece is more than 1
+                    // checking first instance of same color piece space to reference piece is more than 1
                     if (Math.abs(i - y) > 1 && Math.abs(j - x) > 1){
-                        let allWhitePieces = true
-                        // checking if any of the pieces inbetween are black or empty
+                        let oppColor = true
+                        // checking if any of the pieces inbetween are same color or empty
                         for (let k = i - 1, l = j - 1; k > y && l > x; k--, l--){
-                            if (this.rows[k][l] === playerNum){ // If there is a black piece inbetween, return false
-                                allWhitePieces = false
+                            if (this.rows[k][l] === playerNum){ // If there is a same color piece inbetween, return false
+                                oppColor = false
                                 break
                             }
                             else if (this.rows[k][l] === 0){ // if there is an empty space, return false
-                                allWhitePieces = false
+                                oppColor = false
                                 break
                             }
                         }
-                        if (allWhitePieces){ // if they all happen to be white, make all of the spaces black
+                        if (oppColor){ // if they all happen to be opposing color, make all of the spaces player color
                             for (let k = i - 1, l = j - 1; k >= y && l >= x; k--, l--){
                                 if (playerNum === 1) {
                                     this.blackFlips.push([k, l])
@@ -184,21 +184,21 @@ class Othello{
             }
             for (let i = y - 1 , j = x - 1 ; i >= 0 && j >= 0; i--, j--){ // check to see if piece is in up-left diagonal
                 if (this.rows[i][j] === playerNum){
-                    // checking first instance of black piece to reference piece is more than 1
+                    // checking first instance of same color piece space to reference piece is more than 1
                     if (Math.abs(i - y) > 1 && Math.abs(j - x) > 1){
-                        let allWhitePieces = true
-                        // checking if any of the pieces inbetween are black or empty
+                        let oppColor = true
+                        // checking if any of the pieces inbetween are same color or empty
                         for (let k = i + 1, l = j + 1; k < y && l < x; k++, l++){
-                            if (this.rows[k][l] === playerNum){ // If there is a black piece inbetween, return false
-                                allWhitePieces = false
+                            if (this.rows[k][l] === playerNum){ // If there is a same color piece inbetween, return false
+                                oppColor = false
                                 break
                             }
                             else if (this.rows[k][l] === 0){ // if there is an empty space, return false
-                                allWhitePieces = false
+                                oppColor = false
                                 break
                             }
                         }
-                        if (allWhitePieces){ // if they all happen to be white, make all of the spaces black
+                        if (oppColor){ // if they all happen to be opposing color, make all of the spaces player color
                             for (let k = i + 1, l = j + 1; k <= y && l <= x; k++, l++){
                                 if (playerNum === 1) {
                                     this.blackFlips.push([k, l])
@@ -216,21 +216,21 @@ class Othello{
             }
             for (let i = y - 1 , j = x + 1 ; i >= 0 && j < 8; i--, j++){ // check to see if piece is in up-right diagonal
                 if (this.rows[i][j] === playerNum){
-                    // checking first instance of black piece to reference piece is more than 1
+                    // checking first instance of same color piece space to reference piece is more than 1
                     if (Math.abs(i - y) > 1 && Math.abs(j - x) > 1){
-                        let allWhitePieces = true
-                        // checking if any of the pieces inbetween are black or empty
+                        let oppColor = true
+                        // checking if any of the pieces inbetween are same color or empty
                         for (let k = i + 1, l = j - 1; k < y && l > x; k++, l--){
-                            if (this.rows[k][l] === playerNum){ // If there is a black piece inbetween, return false
-                                allWhitePieces = false
+                            if (this.rows[k][l] === playerNum){ // If there is a same color piece inbetween, return false
+                                oppColor = false
                                 break
                             }
                             else if (this.rows[k][l] === 0){ // if there is an empty space, return false
-                                allWhitePieces = false
+                                oppColor = false
                                 break
                             }
                         }
-                        if (allWhitePieces){ // if they all happen to be white, make all of the spaces black
+                        if (oppColor){ // if they all happen to be opposing color, make all of the spaces player color
                             for (let k = i + 1, l = j - 1; k <= y && l >= x; k++, l--){
                                 if (playerNum === 1) {
                                     this.blackFlips.push([k, l])
@@ -248,21 +248,21 @@ class Othello{
             }
             for (let i = y + 1 , j = x - 1 ; i < 8 && j >= 0; i++, j--){ // check to see if piece is in down-left diagonal
                 if (this.rows[i][j] === playerNum){
-                    // checking first instance of black piece to reference piece is more than 1
+                    // checking first instance of same color piece space to reference piece is more than 1
                     if (Math.abs(i - y) > 1 && Math.abs(j - x) > 1){
-                        let allWhitePieces = true
-                        // checking if any of the pieces inbetween are black or empty
+                        let oppColor = true
+                        // checking if any of the pieces inbetween are same color or empty
                         for (let k = i - 1, l = j + 1; k > y && l < x; k--, l++){
-                            if (this.rows[k][l] === playerNum){ // If there is a black piece inbetween, return false
-                                allWhitePieces = false
+                            if (this.rows[k][l] === playerNum){ // If there is a same color piece inbetween, return false
+                                oppColor = false
                                 break
                             }
                             else if (this.rows[k][l] === 0){ // if there is an empty space, return false
-                                allWhitePieces = false
+                                oppColor = false
                                 break
                             }
                         }
-                        if (allWhitePieces){ // if they all happen to be white, make all of the spaces black
+                        if (oppColor){ // if they all happen to be opposing color, make all of the spaces player color
                             for (let k = i - 1, l = j + 1; k >= y && l <= x; k--, l++){
                                 if (playerNum === 1) {
                                     this.blackFlips.push([k, l])
