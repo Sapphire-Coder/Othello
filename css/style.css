@@ -15,6 +15,12 @@ button{
 #cpuScore{
     min-width: 100px;
 }
+#cpuTurnStatus{
+    color: white
+}
+#playerTurnStatus{
+    color: white
+}
 
 #gameBoard{
     display: grid;

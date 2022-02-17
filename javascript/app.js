@@ -7,6 +7,8 @@ class Othello{
         this.cpuPossibleMoves = []
         this.blackScore = 0
         this.whiteScore = 0
+        this.blackHasMoves = false
+        this.whiteHasMoves = false
     }
     createRows() { // creates the 8 rows, and fills them with 0 so they have the proper spaces
         for (let i = 0; i < 8; i++){
@@ -292,6 +294,7 @@ class Othello{
         this.whiteFlips = [] // after making changes, return to an empty array for next legal check move
     }
     cpuRandomMove() { // function for cpu to make a random legal move
+        this.whiteHasMoves = false
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) { // iterating through all and adding legals moves to an array
                 if (this.legalMoveCheck(2, i, j) == true) {
@@ -301,16 +304,22 @@ class Othello{
         }
         this.whiteFlips = [] // resetting the array for whiteFlips since running through tests fill it
         if(this.cpuPossibleMoves.length > 0) {
+            this.whiteHasMoves = true
             let doMove = Math.floor(Math.random() * this.cpuPossibleMoves.length)
             this.legalMoveCheck(2, this.cpuPossibleMoves[doMove][0], this.cpuPossibleMoves[doMove][1])
             this.whiteFlips.forEach(flip => {
                 document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece white"></span>'
-                document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+
             })
             this.flipWhitePieces()
             this.score()
+            this.blackPossibleMoves()
+            if(this.blackHasMoves == false) {
+                this.cpuRandomMove()
+            }
         }
         this.cpuPossibleMoves = [] // resetting the possible moves array back to empty after running possibilites
+        return this.whiteHasMoves
     }
     score() {
         for (let i = 0; i < 8; i++) {
@@ -328,6 +337,29 @@ class Othello{
         this.blackScore = 0
         this.whiteScore = 0
     }
+    blackPossibleMoves() {
+        this.blackHasMoves = false
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) { // iterating through all to check for legal moves
+                if (this.legalMoveCheck(1, i, j) == true) {
+                    this.blackHasMoves = true
+                    break
+                }
+            }
+            if (this.blackHasMoves == true){
+                break
+            }
+        }
+        this.blackFlips = [] // resetting the array for blackFlips since running through tests fill it
+        if(this.blackHasMoves == true) {
+            document.querySelector('#playerTurnStatus').innerHTML = 'Your Turn'
+            document.querySelector('#cpuTurnStatus').innerHTML = null
+        }
+        else {
+            document.querySelector('#playerTurnStatus').innerHTML = "You have no legal moves, so your turn passes."
+        }
+        return this.blackHasMoves
+    }
 }
 
 let x = new Othello
@@ -336,30 +368,30 @@ x.score()
 const cpuMoveDelay = () => {
     x.cpuRandomMove()
 }
-
-document.querySelector('#r3c5').onclick = function() {
-    if (x.legalMoveCheck(1, 2, 4)) {
-        x.blackFlips.forEach(flip => {
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
-        })
-        x.flipBlackPieces()
-        x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+document.querySelector('#reset').onclick = function() {
+    x.createRows()
+    x.score()
+    for (let i = 1; i < 9; i++) {
+        for (let j = 1; j < 9; j++) {
+            document.querySelector(`#r${i}c${j}`).innerHTML = null
+        }
     }
-    else {
-        alert('This is not a valid move!')
-    }
+    document.querySelector(`#r4c4`).innerHTML = '<span class="piece white"></span>'
+    document.querySelector(`#r5c5`).innerHTML = '<span class="piece white"></span>'
+    document.querySelector(`#r4c5`).innerHTML = '<span class="piece black"></span>'
+    document.querySelector(`#r5c4`).innerHTML = '<span class="piece black"></span>'
 }
+
 document.querySelector('#r1c1').onclick = function() {
     if (x.legalMoveCheck(1, 0, 0)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -369,11 +401,12 @@ document.querySelector('#r1c2').onclick = function() {
     if (x.legalMoveCheck(1, 0, 1)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -383,11 +416,12 @@ document.querySelector('#r1c3').onclick = function() {
     if (x.legalMoveCheck(1, 0, 2)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -397,11 +431,12 @@ document.querySelector('#r1c4').onclick = function() {
     if (x.legalMoveCheck(1, 0, 3)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -411,11 +446,12 @@ document.querySelector('#r1c5').onclick = function() {
     if (x.legalMoveCheck(1, 0, 4)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -425,11 +461,12 @@ document.querySelector('#r1c6').onclick = function() {
     if (x.legalMoveCheck(1, 0, 5)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -439,11 +476,12 @@ document.querySelector('#r1c7').onclick = function() {
     if (x.legalMoveCheck(1, 0, 6)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -453,11 +491,12 @@ document.querySelector('#r1c8').onclick = function() {
     if (x.legalMoveCheck(1, 0, 7)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -467,11 +506,12 @@ document.querySelector('#r2c1').onclick = function() {
     if (x.legalMoveCheck(1, 1, 0)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -481,11 +521,12 @@ document.querySelector('#r2c2').onclick = function() {
     if (x.legalMoveCheck(1, 1, 1)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -495,11 +536,12 @@ document.querySelector('#r2c3').onclick = function() {
     if (x.legalMoveCheck(1, 1, 2)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -509,11 +551,12 @@ document.querySelector('#r2c4').onclick = function() {
     if (x.legalMoveCheck(1, 1, 3)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -523,11 +566,12 @@ document.querySelector('#r2c5').onclick = function() {
     if (x.legalMoveCheck(1, 1, 4)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -537,11 +581,12 @@ document.querySelector('#r2c6').onclick = function() {
     if (x.legalMoveCheck(1, 1, 5)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -551,11 +596,12 @@ document.querySelector('#r2c7').onclick = function() {
     if (x.legalMoveCheck(1, 1, 6)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -565,11 +611,12 @@ document.querySelector('#r2c8').onclick = function() {
     if (x.legalMoveCheck(1, 1, 7)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -579,11 +626,12 @@ document.querySelector('#r3c1').onclick = function() {
     if (x.legalMoveCheck(1, 2, 0)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -593,11 +641,12 @@ document.querySelector('#r3c2').onclick = function() {
     if (x.legalMoveCheck(1, 2, 1)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -607,11 +656,12 @@ document.querySelector('#r3c3').onclick = function() {
     if (x.legalMoveCheck(1, 2, 2)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -621,11 +671,12 @@ document.querySelector('#r3c4').onclick = function() {
     if (x.legalMoveCheck(1, 2, 3)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -635,11 +686,12 @@ document.querySelector('#r3c5').onclick = function() {
     if (x.legalMoveCheck(1, 2, 4)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -649,11 +701,12 @@ document.querySelector('#r3c6').onclick = function() {
     if (x.legalMoveCheck(1, 2, 5)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -663,11 +716,12 @@ document.querySelector('#r3c7').onclick = function() {
     if (x.legalMoveCheck(1, 2, 6)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -677,11 +731,12 @@ document.querySelector('#r3c8').onclick = function() {
     if (x.legalMoveCheck(1, 2, 7)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -691,11 +746,12 @@ document.querySelector('#r4c1').onclick = function() {
     if (x.legalMoveCheck(1, 3, 0)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -705,11 +761,12 @@ document.querySelector('#r4c2').onclick = function() {
     if (x.legalMoveCheck(1, 3, 1)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -719,11 +776,12 @@ document.querySelector('#r4c3').onclick = function() {
     if (x.legalMoveCheck(1, 3, 2)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -733,11 +791,12 @@ document.querySelector('#r4c4').onclick = function() {
     if (x.legalMoveCheck(1, 3, 3)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -747,11 +806,12 @@ document.querySelector('#r4c5').onclick = function() {
     if (x.legalMoveCheck(1, 3, 4)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -761,11 +821,12 @@ document.querySelector('#r4c6').onclick = function() {
     if (x.legalMoveCheck(1, 3, 5)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -775,11 +836,12 @@ document.querySelector('#r4c7').onclick = function() {
     if (x.legalMoveCheck(1, 3, 6)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -789,11 +851,12 @@ document.querySelector('#r4c8').onclick = function() {
     if (x.legalMoveCheck(1, 3, 7)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -803,11 +866,12 @@ document.querySelector('#r5c1').onclick = function() {
     if (x.legalMoveCheck(1, 4, 0)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -817,11 +881,12 @@ document.querySelector('#r5c2').onclick = function() {
     if (x.legalMoveCheck(1, 4, 1)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -831,11 +896,12 @@ document.querySelector('#r5c3').onclick = function() {
     if (x.legalMoveCheck(1, 4, 2)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -845,11 +911,12 @@ document.querySelector('#r5c4').onclick = function() {
     if (x.legalMoveCheck(1, 4, 3)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -859,11 +926,12 @@ document.querySelector('#r5c5').onclick = function() {
     if (x.legalMoveCheck(1, 4, 4)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -873,11 +941,12 @@ document.querySelector('#r5c6').onclick = function() {
     if (x.legalMoveCheck(1, 4, 5)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -887,11 +956,12 @@ document.querySelector('#r5c7').onclick = function() {
     if (x.legalMoveCheck(1, 4, 6)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -901,11 +971,12 @@ document.querySelector('#r5c8').onclick = function() {
     if (x.legalMoveCheck(1, 4, 7)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -915,11 +986,12 @@ document.querySelector('#r6c1').onclick = function() {
     if (x.legalMoveCheck(1, 5, 0)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -929,11 +1001,12 @@ document.querySelector('#r6c2').onclick = function() {
     if (x.legalMoveCheck(1, 5, 1)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -943,11 +1016,12 @@ document.querySelector('#r6c3').onclick = function() {
     if (x.legalMoveCheck(1, 5, 2)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -957,11 +1031,12 @@ document.querySelector('#r6c4').onclick = function() {
     if (x.legalMoveCheck(1, 5, 3)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -971,11 +1046,12 @@ document.querySelector('#r6c5').onclick = function() {
     if (x.legalMoveCheck(1, 5, 4)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -985,11 +1061,12 @@ document.querySelector('#r6c6').onclick = function() {
     if (x.legalMoveCheck(1, 5, 5)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -999,11 +1076,12 @@ document.querySelector('#r6c7').onclick = function() {
     if (x.legalMoveCheck(1, 5, 6)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1013,11 +1091,12 @@ document.querySelector('#r6c8').onclick = function() {
     if (x.legalMoveCheck(1, 5, 7)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1027,11 +1106,12 @@ document.querySelector('#r7c1').onclick = function() {
     if (x.legalMoveCheck(1, 6, 0)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1041,11 +1121,12 @@ document.querySelector('#r7c2').onclick = function() {
     if (x.legalMoveCheck(1, 6, 1)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1055,11 +1136,12 @@ document.querySelector('#r7c3').onclick = function() {
     if (x.legalMoveCheck(1, 6, 2)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1069,11 +1151,12 @@ document.querySelector('#r7c4').onclick = function() {
     if (x.legalMoveCheck(1, 6, 3)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1083,11 +1166,12 @@ document.querySelector('#r7c5').onclick = function() {
     if (x.legalMoveCheck(1, 6, 4)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1097,11 +1181,12 @@ document.querySelector('#r7c6').onclick = function() {
     if (x.legalMoveCheck(1, 6, 5)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1111,11 +1196,12 @@ document.querySelector('#r7c7').onclick = function() {
     if (x.legalMoveCheck(1, 6, 6)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1125,11 +1211,12 @@ document.querySelector('#r7c8').onclick = function() {
     if (x.legalMoveCheck(1, 6, 7)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1139,11 +1226,12 @@ document.querySelector('#r8c1').onclick = function() {
     if (x.legalMoveCheck(1, 7, 0)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1153,11 +1241,12 @@ document.querySelector('#r8c2').onclick = function() {
     if (x.legalMoveCheck(1, 7, 1)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1167,11 +1256,12 @@ document.querySelector('#r8c3').onclick = function() {
     if (x.legalMoveCheck(1, 7, 2)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1181,11 +1271,12 @@ document.querySelector('#r8c4').onclick = function() {
     if (x.legalMoveCheck(1, 7, 3)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1195,11 +1286,12 @@ document.querySelector('#r8c5').onclick = function() {
     if (x.legalMoveCheck(1, 7, 4)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1209,11 +1301,12 @@ document.querySelector('#r8c6').onclick = function() {
     if (x.legalMoveCheck(1, 7, 5)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1223,11 +1316,12 @@ document.querySelector('#r8c7').onclick = function() {
     if (x.legalMoveCheck(1, 7, 6)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
@@ -1237,11 +1331,12 @@ document.querySelector('#r8c8').onclick = function() {
     if (x.legalMoveCheck(1, 7, 7)) {
         x.blackFlips.forEach(flip => {
             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
-            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
         })
         x.flipBlackPieces()
         x.score()
-        setTimeout(cpuMoveDelay, 1500) 
+        document.querySelector('#playerTurnStatus').innerHTML = null
+        document.querySelector('#cpuTurnStatus').innerHTML = 'Opponent\'s Turn'
+        setTimeout(cpuMoveDelay, 1500)
     }
     else {
         alert('This is not a valid move!')
