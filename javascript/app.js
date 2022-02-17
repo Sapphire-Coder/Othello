@@ -9,6 +9,8 @@ class Othello{
         this.whiteScore = 0
         this.blackHasMoves = false
         this.whiteHasMoves = false
+        this.playerPass = false
+        this.cpuPass = false
     }
     createRows() { // creates the 8 rows, and fills them with 0 so they have the proper spaces
         for (let i = 0; i < 8; i++){
@@ -305,6 +307,7 @@ class Othello{
         this.whiteFlips = [] // resetting the array for whiteFlips since running through tests fill it
         if(this.cpuPossibleMoves.length > 0) {
             this.whiteHasMoves = true
+            this.cpuPass = false
             let doMove = Math.floor(Math.random() * this.cpuPossibleMoves.length)
             this.legalMoveCheck(2, this.cpuPossibleMoves[doMove][0], this.cpuPossibleMoves[doMove][1])
             this.whiteFlips.forEach(flip => {
@@ -313,10 +316,10 @@ class Othello{
             })
             this.flipWhitePieces()
             this.score()
-            this.blackPossibleMoves()
-            if(this.blackHasMoves == false) {
-                this.cpuRandomMove()
-            }
+        }
+        else{
+            alert('The opponent has no legal moves, their turn passes.')
+            this.cpuPass = true
         }
         this.cpuPossibleMoves = [] // resetting the possible moves array back to empty after running possibilites
         return this.whiteHasMoves
@@ -342,6 +345,7 @@ class Othello{
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) { // iterating through all to check for legal moves
                 if (this.legalMoveCheck(1, i, j) == true) {
+                    this.playerPass = false
                     this.blackHasMoves = true
                     break
                 }
@@ -356,9 +360,41 @@ class Othello{
             document.querySelector('#cpuTurnStatus').innerHTML = null
         }
         else {
-            document.querySelector('#playerTurnStatus').innerHTML = "You have no legal moves, so your turn passes."
+            alert('You have no legal moves, so your turn passes.')
+            this.playerPass = true
         }
         return this.blackHasMoves
+    }
+    winCheck() {
+        this.blackPossibleMoves()
+        if(this.blackHasMoves == false && this.cpuRandomMove() == true) {
+            this.cpuRandomMove()
+        }
+        if(this.playerPass == true && this.cpuPass == true){
+            let finalPlayerScore = 0
+            let finalCpuScore = 0
+            for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++){
+                    if (this.rows[i][j] == 1)
+                    finalPlayerScore++
+                    else if (this.rows[i][j] == 2) {
+                        finalCpuScore++
+                    }
+                }
+            }
+            if (finalPlayerScore > finalCpuScore) {
+                document.querySelector('#playerTurnStatus').innerHTML = 'You win!'
+                document.querySelector('#cpuTurnStatus').innerHTML = 'The opponent loses!'
+            }
+            else if (finalPlayerScore < finalCpuScore) {
+                document.querySelector('#playerTurnStatus').innerHTML = 'You lose!'
+                document.querySelector('#cpuTurnStatus').innerHTML = 'The opponent wins!'
+            }
+            else {
+                document.querySelector('#cpuTurnStatus').innerHTML = 'It is a tie!'
+                document.querySelector('#cpuTurnStatus').innerHTML = 'It is a tie!'
+            }
+        }
     }
 }
 
@@ -367,6 +403,7 @@ x.createRows()
 x.score()
 const cpuMoveDelay = () => {
     x.cpuRandomMove()
+    x.winCheck()
 }
 document.querySelector('#reset').onclick = function() {
     x.createRows()
@@ -376,6 +413,8 @@ document.querySelector('#reset').onclick = function() {
             document.querySelector(`#r${i}c${j}`).innerHTML = null
         }
     }
+    document.querySelector('#playerTurnStatus').innerHTML = 'Your Turn'
+    document.querySelector('#cpuTurnStatus').innerHTML = null
     document.querySelector(`#r4c4`).innerHTML = '<span class="piece white"></span>'
     document.querySelector(`#r5c5`).innerHTML = '<span class="piece white"></span>'
     document.querySelector(`#r4c5`).innerHTML = '<span class="piece black"></span>'
