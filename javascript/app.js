@@ -12,10 +12,10 @@ class Othello{
         for (let i = 0; i < 8; i++){
             this.rows[i] = [0, 0, 0, 0, 0, 0, 0, 0]
         } // 1 stands for black pieces, 2 stands for white pieces, and this initiates the starting board
-        this.rows[3][3] = 1
-        this.rows[3][4] = 2
-        this.rows[4][3] = 2
-        this.rows[4][4] = 1
+        this.rows[3][3] = 2
+        this.rows[3][4] = 1
+        this.rows[4][3] = 1
+        this.rows[4][4] = 2
     }
     legalMoveCheck(playerNum, y, x) {
         this.legalMove = false
