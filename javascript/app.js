@@ -5,6 +5,8 @@ class Othello{
         this.blackFlips = []
         this.whiteFlips = []
         this.cpuPossibleMoves = []
+        this.blackScore = 0
+        this.whiteScore = 0
     }
     createRows() { // creates the 8 rows, and fills them with 0 so they have the proper spaces
         for (let i = 0; i < 8; i++){
@@ -301,29 +303,567 @@ class Othello{
         if(this.cpuPossibleMoves.length > 0) {
             let doMove = Math.floor(Math.random() * this.cpuPossibleMoves.length)
             this.legalMoveCheck(2, this.cpuPossibleMoves[doMove][0], this.cpuPossibleMoves[doMove][1])
+            this.whiteFlips.forEach(flip => {
+                document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece white"></span>'
+                document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            })
             this.flipWhitePieces()
+            this.score()
         }
         this.cpuPossibleMoves = [] // resetting the possible moves array back to empty after running possibilites
+    }
+    score() {
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                if (this.rows[i][j] === 1) {
+                    this.blackScore++
+                }
+                else if (this.rows[i][j] === 2) {
+                    this.whiteScore++
+                }
+            }
+        }
+        document.querySelector('#blackScore').innerHTML = `${this.blackScore}`
+        document.querySelector('#whiteScore').innerHTML = `${this.whiteScore}`
+        this.blackScore = 0
+        this.whiteScore = 0
     }
 }
 
 let x = new Othello
 x.createRows()
-console.log(x.rows)
+x.score()
+// console.log(x.rows)
 // x.rows[5][2] = 1
 // x.rows[3][5] = 2
 // x.rows[4][5] = 2
 // x.rows[5][5] = 1
 // console.log(x.rows)
 // console.log(x.legalMoveCheck(2, 2, 3))
-x.cpuRandomMove()
+// x.cpuRandomMove()
 // console.log(x.whiteFlips)
 // x.flipWhitePieces()
 // console.log(x.whiteFlips)
 // console.log(x.cpuPossibleMoves)
-console.log(x.rows)
+// console.log(x.rows)
 // console.log(x.legalMoveCheck(1, 7, 7))
-// document.querySelector('#r3c5').addEventListener('click', function() {
-//     let piece = document.querySelector('#gameBoard').appendChild('#r3c5').createElement('span')
-//     piece.classList('black')
-// })
+// let r3c5 = document.querySelector('#r3c5')
+
+document.querySelector('#r3c5').onclick = function() {
+    if (x.legalMoveCheck(1, 2, 4)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r1c1').onclick = function() {
+    if (x.legalMoveCheck(1, 0, 0)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r1c2').onclick = function() {
+    if (x.legalMoveCheck(1, 0, 1)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r1c3').onclick = function() {
+    if (x.legalMoveCheck(1, 0, 2)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r1c4').onclick = function() {
+    if (x.legalMoveCheck(1, 0, 3)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r1c5').onclick = function() {
+    if (x.legalMoveCheck(1, 0, 4)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r1c6').onclick = function() {
+    if (x.legalMoveCheck(1, 0, 5)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r1c7').onclick = function() {
+    if (x.legalMoveCheck(1, 0, 6)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r1c8').onclick = function() {
+    if (x.legalMoveCheck(1, 0, 7)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r2c1').onclick = function() {
+    if (x.legalMoveCheck(1, 1, 0)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r2c2').onclick = function() {
+    if (x.legalMoveCheck(1, 1, 1)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r2c3').onclick = function() {
+    if (x.legalMoveCheck(1, 1, 2)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r2c4').onclick = function() {
+    if (x.legalMoveCheck(1, 1, 3)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r2c5').onclick = function() {
+    if (x.legalMoveCheck(1, 1, 4)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r2c6').onclick = function() {
+    if (x.legalMoveCheck(1, 1, 5)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r2c7').onclick = function() {
+    if (x.legalMoveCheck(1, 1, 6)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r2c8').onclick = function() {
+    if (x.legalMoveCheck(1, 1, 7)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r3c1').onclick = function() {
+    if (x.legalMoveCheck(1, 2, 0)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r3c2').onclick = function() {
+    if (x.legalMoveCheck(1, 2, 1)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r3c3').onclick = function() {
+    if (x.legalMoveCheck(1, 2, 2)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r3c4').onclick = function() {
+    if (x.legalMoveCheck(1, 2, 3)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r3c5').onclick = function() {
+    if (x.legalMoveCheck(1, 2, 4)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r3c6').onclick = function() {
+    if (x.legalMoveCheck(1, 2, 5)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r3c7').onclick = function() {
+    if (x.legalMoveCheck(1, 2, 6)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r3c8').onclick = function() {
+    if (x.legalMoveCheck(1, 2, 7)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r4c1').onclick = function() {
+    if (x.legalMoveCheck(1, 3, 0)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r4c2').onclick = function() {
+    if (x.legalMoveCheck(1, 3, 1)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r4c3').onclick = function() {
+    if (x.legalMoveCheck(1, 3, 2)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r4c4').onclick = function() {
+    if (x.legalMoveCheck(1, 3, 3)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r4c5').onclick = function() {
+    if (x.legalMoveCheck(1, 3, 4)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r4c6').onclick = function() {
+    if (x.legalMoveCheck(1, 3, 5)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r4c7').onclick = function() {
+    if (x.legalMoveCheck(1, 3, 6)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+document.querySelector('#r4c8').onclick = function() {
+    if (x.legalMoveCheck(1, 3, 7)) {
+        x.blackFlips.forEach(flip => {
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+            document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+            x.score()
+        })
+        x.flipBlackPieces()
+        setTimeout(x.cpuRandomMove(), 5000) 
+    }
+    else {
+        alert('This is not a valid move!')
+    }
+}
+// document.querySelector('#r5c1').onclick = function() {
+//     if (x.legalMoveCheck(1, 4, 0)) {
+//         x.blackFlips.forEach(flip => {
+//             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+//             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+//             x.score()
+//         })
+//         x.flipBlackPieces()
+//         setTimeout(x.cpuRandomMove(), 5000) 
+//     }
+//     else {
+//         alert('This is not a valid move!')
+//     }
+// }
+// document.querySelector('#r5c2').onclick = function() {
+//     if (x.legalMoveCheck(1, 4, 1)) {
+//         x.blackFlips.forEach(flip => {
+//             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+//             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+//             x.score()
+//         })
+//         x.flipBlackPieces()
+//         setTimeout(x.cpuRandomMove(), 5000) 
+//     }
+//     else {
+//         alert('This is not a valid move!')
+//     }
+// }
+// document.querySelector('#r5c3').onclick = function() {
+//     if (x.legalMoveCheck(1, 4, 2)) {
+//         x.blackFlips.forEach(flip => {
+//             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+//             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+//             x.score()
+//         })
+//         x.flipBlackPieces()
+//         setTimeout(x.cpuRandomMove(), 5000) 
+//     }
+//     else {
+//         alert('This is not a valid move!')
+//     }
+// }
+// document.querySelector('#r5c1').onclick = function() {
+//     if (x.legalMoveCheck(1, 4, 0)) {
+//         x.blackFlips.forEach(flip => {
+//             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).innerHTML = '<span class="piece black"></span>'
+//             document.querySelector(`#r${flip[0] + 1}c${flip[1] + 1}`).removeAttribute('onclick')
+//             x.score()
+//         })
+//         x.flipBlackPieces()
+//         setTimeout(x.cpuRandomMove(), 5000) 
+//     }
+//     else {
+//         alert('This is not a valid move!')
+//     }
+// }
