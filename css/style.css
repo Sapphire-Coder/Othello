@@ -8,6 +8,9 @@ button{
 h1{
     margin-bottom: 15px;
 }
+nav{
+    position: fixed;
+}
 #reset{
     color: white;
     background-color: tan;
