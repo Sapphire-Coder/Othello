@@ -318,7 +318,7 @@ class Othello{
             this.score()
         }
         else{
-            alert('The opponent has no legal moves, their turn passes.')
+            document.querySelector('#cpuTurnStatus').innerHTML = 'The opponent has no legal moves, their turn passes.'
             this.cpuPass = true
         }
         this.cpuPossibleMoves = [] // resetting the possible moves array back to empty after running possibilites
@@ -360,7 +360,7 @@ class Othello{
             document.querySelector('#cpuTurnStatus').innerHTML = null
         }
         else {
-            alert('You have no legal moves, so your turn passes.')
+            document.querySelector('#playerTurnStatus').innerHTML = 'You have no legal moves, so your turn passes.'
             this.playerPass = true
         }
         return this.blackHasMoves
